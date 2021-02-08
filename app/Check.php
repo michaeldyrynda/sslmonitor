@@ -16,6 +16,7 @@ class Check extends Model
         'is_valid' => 'boolean',
         'valid_from' => 'datetime',
         'certificate_expires_at' => 'datetime',
+        'domain_expires_at' => 'datetime',
     ];
 
     public function monitor(): BelongsTo
