@@ -23,6 +23,7 @@ class CreateChecksTable extends Migration
             $table->timestamps();
             $table->timestamp('valid_from')->nullable();
             $table->timestamp('certificate_expires_at')->nullable();
+            $table->timestamp('domain_expires_at')->nullable();
         });
     }
 }
