@@ -36,11 +36,13 @@ class MonitorStatus extends Component
                 ? 'Certificate expired' 
                 : 'Certificate is invalid';
         } 
-        
-        if ($this->monitor->is_expiring) {
+
+        if ($this->monitor->should_renew_domain || $this->monitor->is_expiring) {
             $this->outer = 'bg-yellow-100';
             $this->inner = 'bg-yellow-400';
-            $this->tooltip = 'Certificate is expiring';
+            $this->tooltip = $this->monitor->should_renew_domain
+                ? 'Domain is due for renewal'
+                : 'Certificate is expiring';
         }
     }
 }

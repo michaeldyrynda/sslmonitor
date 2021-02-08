@@ -75,4 +75,10 @@ class Monitor extends Model
     {
         return ! $this->is_valid;
     }
+
+    public function shouldRenewDomainAttribute(): bool
+    {
+        return ! is_null($this->domain_expires_at)
+            && $this->domain_expires_at->diffInDays() <= 90;
+    }
 }
