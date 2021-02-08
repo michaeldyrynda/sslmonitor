@@ -70,7 +70,10 @@ class SiteHealth
             return null;
         }
 
-        return Str::of(data_get($this->whois->getExtra(), 'groups.0.Status'))->before(' ');
+        return collect(Arr::wrap(data_get($this->whois->getExtra(), 'groups.*.Status'), []))
+            ->flatten()
+            ->map(fn ($status) => Str::of($status)->before(' '))
+            ->implode(', ');
     }
 
     protected function getWhois(): Whois
