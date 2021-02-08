@@ -7,30 +7,33 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Date;
-use Spatie\SslCertificate\SslCertificate;
 
 class Monitor extends Model
 {
     use HasFactory;
 
     protected $casts = [
+        'is_valid' => 'boolean',
+        'is_domain_valid' => 'boolean',
         'certificate_expires_at' => 'datetime',
         'domain_expires_at' => 'datetime',
         'last_checked_at' => 'datetime',
     ];
 
-    public function createCheckFromCertificate(SslCertificate $certificate): Check
+    public function createCheckFromLookup(SiteHealth $health): Check
     {
         return $this->checks()->create([
-            'issuer' => $certificate->getIssuer(),
-            'domain' => $certificate->getDomain(),
-            'algorithm' => $certificate->getSignatureAlgorithm(),
-            'organisation' => $certificate->getOrganization(),
-            'additional_domains' => $certificate->getAdditionalDomains(),
-            'sha256_fingerprint' => $certificate->getFingerprintSha256(),
-            'is_valid' => $certificate->isValid(),
-            'valid_from' => $certificate->validFromDate(),
-            'certificate_expires_at' => $certificate->expirationDate(),
+            'issuer' => $health->certificate->getIssuer(),
+            'domain' => $health->certificate->getDomain(),
+            'algorithm' => $health->certificate->getSignatureAlgorithm(),
+            'organisation' => $health->certificate->getOrganization(),
+            'additional_domains' => $health->certificate->getAdditionalDomains(),
+            'sha256_fingerprint' => $health->certificate->getFingerprintSha256(),
+            'is_valid' => $health->certificate->isValid(),
+            'is_domain_valid' => $health->isDomainValid(),
+            'domain_status' => $health->domainStatus(),
+            'valid_from' => $health->certificate->validFromDate(),
+            'certificate_expires_at' => $health->certificate->expirationDate(),
         ]);
     }
 
@@ -61,6 +64,11 @@ class Monitor extends Model
     public function getIsExpiringAttribute(): bool
     {
         return optional($this->certificate_expires_at)->diffInDays() <= 14;
+    }
+
+    public function getIsHealthyAttribute(): bool
+    {
+        return $this->is_valid && $this->is_domain_valid;
     }
 
     public function getIsInvalidAttribute(): bool

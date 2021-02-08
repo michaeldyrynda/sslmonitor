@@ -12,10 +12,11 @@ class CreateMonitorsTable extends Migration
             $table->id();
             $table->string('site')->unique();
             $table->boolean('is_valid')->default(true);
+            $table->boolean('is_domain_valid')->default(true);
+            $table->string('domain_status')->nullable();
             $table->timestamps();
             $table->timestamp('last_checked_at')->nullable();
             $table->timestamp('certificate_expires_at')->nullable();
-            $table->timestamp('domain_expires_at')->nullable();
         });
     }
 }

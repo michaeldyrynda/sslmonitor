@@ -18,6 +18,8 @@ class CreateChecksTable extends Migration
             $table->text('additional_domains')->nullable();
             $table->text('sha256_fingerprint')->nullable();
             $table->boolean('is_valid')->nullable();
+            $table->boolean('is_domain_valid')->nullable();
+            $table->string('domain_status')->nullable();
             $table->timestamps();
             $table->timestamp('valid_from')->nullable();
             $table->timestamp('certificate_expires_at')->nullable();

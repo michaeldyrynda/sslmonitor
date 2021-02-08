@@ -39,18 +39,17 @@
 			>
 				<div class="relative">
 					<div class="absolute top-0 right-0">
-						<button @click="open = false">Close</button>
+						<button @click="open = false">
+							<x-heroicon-s-x class="h-5 w-6" />
+						</button>
 					</div>
-					<div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-						<!-- Heroicon name: outline/check -->
-						<svg class="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-						</svg>
-					</div>
-					<div class="relative mt-3 sm:mt-5">
-						<h3 class="text-lg leading-6 font-medium text-gray-900 text-center" id="modal-headline">
-							{{ $check->monitor->site }}
-						</h3>
+					<div class="mt-3 sm:mt-5">
+						<div class="flex items-center justify-center space-x-2">
+							<x-monitor-status :monitor="$check->monitor" />
+							<h3 class="text-lg leading-6 font-medium text-gray-900 text-center" id="modal-headline">
+								{{ $check->monitor->site }}
+							</h3>
+						</div>
 						<div class="mt-2 text-center">
 							<p class="text-sm text-gray-500">
 								Site last checked <x-localised-date timestamp="{{ $check->created_at->timestamp }}"></x-localised-date>
@@ -58,6 +57,25 @@
 						</div>
 						<div class="mt-2 -mx-4 sm:-mx-6">
 							<dl class="sm:divide-y sm:divide-gray-200">
+								<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+									<dt class="text-sm font-medium text-gray-500">
+										Domain Status
+									</dt>
+									<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+										<div class="flex items-center space-x-2">
+											<span>
+												{{ $check->domain_status }}
+											</span>
+											<div class="w-4 h-4">
+												@if ($check->is_domain_valid)
+													<x-heroicon-o-badge-check /> 
+												@else 
+													<x-heroicon-o-ban /> 
+												@endif
+											</div>
+										</div>
+									</dd>
+								</div>
 								<div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
 									<dt class="text-sm font-medium text-gray-500">
 										Certificate Issuer	
