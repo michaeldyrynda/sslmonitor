@@ -25,4 +25,11 @@ class SiteMonitors extends Component
     {
         $this->resetPage();
     }
+
+    public function deleteMonitor(Monitor $monitor)
+    {
+        $monitor->delete();
+
+        $this->updateMonitors();
+    }
 }

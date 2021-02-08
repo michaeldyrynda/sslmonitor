@@ -60,6 +60,13 @@
                       @if ($monitor->latestCheck)
                         <livewire:check-details :check="$monitor->latestCheck" :key="$monitor->latestCheck->id" />
                       @endif
+
+                      <button
+                        wire:click="deleteMonitor({{ $monitor->id }})" 
+                        onclick="javascript: return confirm('Are you sure you want to remove this monitor?')"
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 @empty
