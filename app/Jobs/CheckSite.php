@@ -80,6 +80,7 @@ class CheckSite implements ShouldQueue
                 ->notify(new DomainReadyForRenewal($this->monitor));
 
             $this->monitor->fill(['domain_expires_at' => Date::now()->addDays(90)]);
+            $this->check->update(['domain_expires_at' => Date::now()->addDays(90)]);
 
             return;
         }
