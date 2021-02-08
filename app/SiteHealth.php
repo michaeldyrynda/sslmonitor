@@ -17,7 +17,7 @@ class SiteHealth
 
     public SslCertificate $certificate;
 
-    public TldInfo $whois;
+    public ?TldInfo $whois;
 
     private function __construct(string $domain)
     {
@@ -46,16 +46,24 @@ class SiteHealth
         );
     }
 
-    public function isDomainValid(): bool
+    public function isDomainValid(): ?bool
     {
+        if (! $this->whois) {
+            return true;
+        }
+
         return collect($this->whois->states ?? [])->contains(fn ($value) => in_array($value, [
             'ok',
             'serverrenewprohibited',
         ]));
     }
 
-    public function domainStatus(): string
+    public function domainStatus(): ?string
     {
+        if (! $this->whois) {
+            return null;
+        }
+
         return Str::of(data_get($this->whois->getExtra(), 'groups.0.Status'))->before(' ');
     }
 

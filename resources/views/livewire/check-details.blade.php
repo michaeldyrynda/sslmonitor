@@ -64,7 +64,7 @@
 									<dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
 										<div class="flex items-center space-x-2">
 											<span>
-												{{ $check->domain_status }}
+												{{ $check->domain_status ?: 'N/A' }}
 											</span>
 											<div class="w-4 h-4">
 												@if ($check->is_domain_valid)
