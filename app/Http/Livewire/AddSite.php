@@ -4,10 +4,14 @@ namespace App\Http\Livewire;
 
 use App\Jobs\CheckSite;
 use App\Monitor;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Throwable;
 
 class AddSite extends Component
 {
+    public ?string $error;
+
     public $site;
 
     public bool $added = false;
@@ -29,16 +33,24 @@ class AddSite extends Component
 
     public function addMonitor()
     {
+        $this->error = null;
+
         $this->validate();
 
-        CheckSite::dispatch(Monitor::create([
-            'site' => $this->site,
-        ]));
+        try {
+            DB::transaction(function () {
+                CheckSite::dispatch(Monitor::create([
+                    'site' => $this->site,
+                ]));
 
-        $this->added = true;
+                $this->added = true;
 
-        $this->site = null;
+                $this->site = null;
 
-        $this->emitTo('site-monitors', 'siteAdded');
+                $this->emitTo('site-monitors', 'siteAdded');
+            });
+        } catch (Throwable $e) {
+            $this->error = $e->getMessage();
+        }
     }
 }

@@ -16,7 +16,7 @@ class SiteHealth
 {
     public string $domain;
 
-    public SslCertificate $certificate;
+    public ?SslCertificate $certificate;
 
     public ?TldInfo $whois;
 
