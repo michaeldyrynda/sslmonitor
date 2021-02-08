@@ -10,6 +10,7 @@ use Iodev\Whois\Modules\Tld\TldInfo;
 use Iodev\Whois\Modules\Tld\TldServer;
 use Iodev\Whois\Whois;
 use Spatie\SslCertificate\SslCertificate;
+use Throwable;
 
 class SiteHealth
 {
@@ -39,11 +40,16 @@ class SiteHealth
 
     protected function lookupDomain(): void
     {
-        $this->whois = cache()->remember(
-            "whois:{$this->domain}",
-            Date::now()->addHours(6),
-            fn () => $this->getWhois()->loadDomainInfo($this->domain)
-        );
+        try {
+            $this->whois = cache()->remember(
+                "whois:{$this->domain}",
+                Date::now()->addHours(6),
+                fn () => $this->getWhois()->loadDomainInfo($this->domain)
+            );
+        } catch (Throwable $e) {
+            // no-op
+            $this->whois = null;
+        }
     }
 
     public function isDomainValid(): ?bool
